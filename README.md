@@ -1,95 +1,178 @@
-# 阿房宫前殿 · 交互三维复原假说
+<p align="center">
+  <img src="shots/20_hero_grand.png" width="100%" alt="复原假说的实际截图：殿庭低机位望向三级台座与庑殿顶主殿，台下有黑旗与人物">
+</p>
 
-打开 [`index.html`](./index.html)（需联网）。设计依据见 [`brief.md`](./brief.md)。截图见 [`shots/`](./shots/)。
+<h1 align="center">阿房宫前殿 · Epang Palace Front Hall</h1>
 
-# 阿房宫前殿 · 交互三维复原假说
+<p align="center">
+  <strong>把一座只建成夯土台基的朝宫，做成可以走进去的三维假说。</strong><br>
+  An interactive three.js hypothesis of a hall the archaeology says was never built.
+</p>
 
-> **历史说明**：考古表明阿房宫前殿**只筑成夯土台基，宫殿从未建成**，台基上未见秦代宫殿建筑遗迹，也未经大规模焚烧。本作品台上的一切建筑均为「若按《史记》规划建成会是什么样」的**复原假说**，不是史实再现。页面右下角与「史料」面板（按 `I`）均有说明。
+<p align="center">
+  台上建筑是推测。台基尺寸来自考古。打开即可拆层、炸开、剖切、标注，并第一人称走上殿。<br>
+  The terrace measurements are archaeological. Everything standing on it is speculative.
+</p>
 
-单文件网页：`index.html`（three.js 0.170，jsDelivr CDN），可直接双击从磁盘打开，或放到任何静态托管上。需要联网加载 three.js 与字体。
+<p align="center">
+  <a href="https://tuanziding.github.io/epang-palace/"><strong>打开在线演示 · Open the live page</strong></a><br>
+  <a href="https://tuanziding.github.io/epang-palace/">https://tuanziding.github.io/epang-palace/</a>
+</p>
 
-## 操作
+<p align="center"><sub>Pages API 返回 HTTP 403，当前凭据不能直接开通站点。推送到 <code>main</code> 后由 <a href=".github/workflows/pages.yml">pages.yml</a> 发布根目录的 <code>index.html</code>。上面的地址在该工作流成功后才会打开。</sub></p>
+
+<p align="center">
+  <a href="README.md">简体中文</a> · <a href="docs/英文说明v1.0.md">English</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/TUANZIDING/epang-palace/actions/workflows/pages.yml"><img src="https://github.com/TUANZIDING/epang-palace/actions/workflows/pages.yml/badge.svg" alt="Pages 发布"></a>
+</p>
+
+<p align="center">
+  <code>three.js 单文件</code> · <code>逐层拆解</code> · <code>炸开 / 剖切</code> · <code>第一人称漫游</code>
+</p>
+
+<p align="center">
+  <a href="#use-cases">使用场景</a> ｜ <a href="#showcase">场景一览</a> ｜ <a href="#quick-start">快速开始</a> ｜ <a href="#controls">操作</a> ｜ <a href="#capabilities">能力与边界</a> ｜ <a href="#contribute">文档</a>
+</p>
+
+<p align="center"><sub>主图是本仓库场景的实际截图，不是考古照片，也不是已建成宫殿的记录。</sub></p>
+
+> **历史说明**：考古表明阿房宫前殿**只筑成夯土台基，宫殿从未建成**，台基上未见秦代宫殿建筑遗迹，也未经大规模焚烧。本作品台上的一切建筑均为「若按《史记》规划建成会是什么样」的**复原假说**，不是史实再现。页面右下角与「史料」面板（按 `I`）均有同一说明。
+
+---
+
+<a id="use-cases"></a>
+
+## 看台基，也看一种建成想象 · Use cases
+
+| 你想做什么 | 可以怎样开始 |
+| --- | --- |
+| 先看整体，再走进殿内 | 打开[在线页面](https://tuanziding.github.io/epang-palace/)，或直接打开 [`index.html`](index.html) |
+| 像解剖图谱一样逐层拆开 | 右侧「逐层拆解」：屋面 → 木构 → 梁枋 → 柱网 → 墙体 → 陈设 → 台上附属 → 二层台 → 夯土台基 |
+| 核对哪些是考古、哪些是推测 | 按 `I` 打开史料；尺度与【推测】清单见 [`brief.md`](brief.md) |
+| 沿中轴走一遍 | 按 `F`：坡道脚下 → 南坡道 → 殿庭 → 踏道 → 前殿 |
+
+<a id="showcase"></a>
+
+## 同一座假说的四个看法 · Showcase
+
+截图来自 `shots/`，都是这个 three.js 场景的画面，不是航拍或发掘现场。
+
+| 中轴俯瞰 | 装配炸开 |
+| --- | --- |
+| [![台基、南坡道、殿庭与主殿的高空中轴截图](shots/21_axis_approach.png)](https://tuanziding.github.io/epang-palace/) | [![屋顶、柱、墙与陈设沿装配方向分开的截图](shots/19_layers_step8_explode.png)](https://tuanziding.github.io/epang-palace/) |
+| [打开页面](https://tuanziding.github.io/epang-palace/) | [打开页面](https://tuanziding.github.io/epang-palace/) |
+
+| 总览 | 殿内第一人称 |
+| --- | --- |
+| [![夯土台基与主殿、配殿、四角阙的总览截图](shots/01_overview.png)](shots/01_overview.png) | [![殿内朝北望向屏风与御座台的漫游截图](shots/14_walk_interior_throne.png)](shots/14_walk_interior_throne.png) |
+| [查看大图](shots/01_overview.png) | [查看大图](shots/14_walk_interior_throne.png) |
+
+<sub>另有全层装配 <code>shots/19_layers_step1_full.png</code> 与近景陈设 <code>shots/17_decor_throne.png</code>。画面中的瓦当、漆木、屏风、编钟和人物都是【推测】。</sub>
+
+<a id="quick-start"></a>
+
+## 先用起来 · Quick start
+
+需要联网，用来加载 three.js 0.170（jsDelivr）和字体。没有构建步骤，也没有密钥。
+
+**在线：** [https://tuanziding.github.io/epang-palace/](https://tuanziding.github.io/epang-palace/)
+
+**本地：** 进入仓库根目录后执行
+
+```sh
+python3 -m http.server 8080 --bind 127.0.0.1
+```
+
+浏览器打开 http://127.0.0.1:8080/ 。也可以直接双击 `index.html`。低配机器可在地址后加 `?q=low` 关闭环境光遮蔽与灯焰泛光。
+
+[设计说明](brief.md) · [English](docs/英文说明v1.0.md)
+
+<a id="controls"></a>
+
+## 操作 · Controls
 
 | 模式 | 按键 | 说明 |
-|---|---|---|
-| 拆解 / 复原 | `E` | 各部件沿装配方向飞散，再按一次回位；开场有自动装配动画 |
-| 剖切 | `C` | 沿中轴东侧 4.5 m 纵剖，剖面以红色斜线填充（主殿、二层台、踏道、坡道被剖开） |
-| 标注 | `L` | 中文引线标注，【推测】项单独注明 |
-| 漫游 | `F` | 第一人称：`WASD`/方向键移动，鼠标环视（点击画面锁定指针，或按住拖动），`Shift` 疾行，空格跳，`Esc`/`F` 退出 |
-| 史料 | `I` | 依据、尺度换算、推测项清单、来源 |
-| 复位 | `R` | 回到总览 |
-| 时辰滑块 | — | 06:00–18:00 日光方向与色温 |
+| --- | --- | --- |
+| 拆解 / 复原 | `E` | 各部件沿装配方向飞散，再按一次回位；开场有自动装配 |
+| 剖切 | `C` | 沿中轴东侧 4.5 m 纵剖，剖面为红色斜线 |
+| 标注 | `L` | 中文引线；【推测】项单独注明 |
+| 漫游 | `F` | `WASD` / 方向键，鼠标环视，`Shift` 疾行，空格跳，`Esc` 或再按 `F` 退出 |
+| 史料 | `I` | 依据、尺度换算、推测项与来源 |
+| 复位 | `R` | 回到总览，并恢复全部图层 |
+| 时辰 | 滑块 | 06:00–18:00，按西安纬度计算日光方向与色温 |
+| 逐层 | 右侧面板 | 九层开关、仅显示此层、滑杆移除、逐层拆解、全部炸开、自下而上装配 |
 
-漫游路线：坡道脚下（五丈黑旗）→ 登南坡道上台基 → 穿殿庭 → 上二层台踏道 → 入前殿。殿内有柱网、石础、黑漆梁枋、斗栱雏形、三重御座台、御床、三扇漆屏风、两侧漆屏、青铜灯（含暖光）与内壁车马壁画带。碰撞：地面射线（可上 ≤0.7 m 的台阶 / 坡道，有重力），墙体射线（墙、柱、屏风、灯、台缘均挡人，可沿墙滑行）。
+逐层顺序：1 屋面瓦 → 2 屋顶木构 / 斗栱 → 3 梁枋 → 4 柱网 → 5 墙体门窗 → 6 室内陈设 → 7 台上附属 → 8 二层台 → 9 夯土台基。
 
-## 尺度（米，取自 `../brief.md`）
+<a id="workflow"></a>
 
-- 夯土台基 1270 × 426 × 12（考古）；南缘三段折线，中段北移 32 m（示意 2025 年发现，**非测绘线**）；页面按多边形算得面积 525,940 ㎡（考古报道约 54.1 万 ㎡，差值来自折线示意）
-- 西 / 北 / 东夯土墙：厚 15、高 3【推测】，墙顶铺瓦（考古所见）；南面敞开
-- 南坡道 60 × 80，坡度约 1:6.7【推测】，坡顶接南缘中段
-- 殿庭 693 × 115.5 =（五百步，五十丈）× 秦尺 0.231 m，中心 z = −90（台基北半中轴）
-- 二层台 170 × 76 × 5【推测】；南踏道 24 m 宽、25 m 长、20 级
-- 主殿【推测】：24 × 10 根柱，开间 6.25 m × 进深 6.0 m（23 × 9 间，柱网 143.75 × 54，外墙约 150 × 60）；柱高 6.5、柱径 0.72；斗栱层 1.1；檐口高 24.6
-- 庑殿顶：檐口 158 × 68，正脊 90 m，举高 14，前后坡 1:2.43；四垂脊；**无鸱尾**；檐头云纹瓦当（间距 0.5 m，实例化）
-- 东西配殿 70 × 40（屋顶 76 × 46，举高 9）；回廊宽 6、柱距约 4；四角阙（阙台 15 × 15 × 10 + 木构楼 + 庑殿顶）
-- 阁道：宽 6、桥面距台面 8 m，自殿庭南缘向南截取至 z = 620；复道：双层，北越台墙至 z = −360
-- 五丈黑旗：旗杆 11.55 m × 6 根，坡道脚下
+## 从台基读到木构 · Workflow
 
-## 材料（程序化贴图，无外部图片）
+**总览 → 逐层拆开 → 剖切 / 标注 → 第一人称走上殿 → 按 `I` 核对史料**
 
-夯土（8–12 cm 夯层、分块竖缝、顶面夯窝，三向投影）；灰陶筒瓦 / 板瓦（凹凸贴图）；云纹瓦当（四分格卷云）；朱漆柱与黑漆梁枋（清漆层）；白灰墙与朱色壁带；方砖铺地；空心砖踏步纹；黑地朱绘漆屏风；青铜灯；车马出行 + 回纹 + 菱形纹壁画【推测】。
+| 想做的事 | 页面怎样支持 |
+| --- | --- |
+| 只看考古还能支撑的部分 | 预设「仅台基」，或滑杆拆到夯土台基 |
+| 看木构怎么叠起来 | 「仅主体木构」，或「全部装配」自下而上落位 |
+| 看殿内陈设 | 漫游进入前殿；鼎、灯、漆案、屏风、编钟、帷帐均可被拆开，也会挡住行走 |
+| 给脚本或截图用 | `window.__app`：`peel`、`setLayers`、`playPeel`、`assembleAll`、`cine` |
 
-## 与 machine-skill 的关系
+<a id="capabilities"></a>
 
-界面与交互参照 [AirsupHQ/machine-skill](https://github.com/AirsupHQ/machine-skill)（MIT）的 `kit/lab-kit.js`：编辑式侧栏（提示条、衬线标题、主读数 + 细进度条）、带快捷键的模式按钮、缓动的拆解偏移与装配动画、剖切面红色斜线剖面、左右分栏避让的引线标注、`window.__app` 自动化钩子（同 `__lab`）。**没有直接内联 lab-kit**：它把机器缩放到约 2.4 个显示单位、配摄影棚纸面布景，不适合 1.3 km 的场地和人眼高度漫游，所以按同样的模式另写了一份场地级实现。
+## 当前做到哪一步 · Capability status
 
-## 验证
+| 状态 | 内容 | 边界 |
+| --- | --- | --- |
+| 已实现 | 单文件场景：逐层、炸开、剖切、标注、漫游、秦式陈设、日照与软阴影 | 台上建筑、开间、屋顶、阁道与陈设都是推测 |
+| 考古底座 | 夯土台基约 1270 × 426 × 12 m；西、北、东墙，南面敞开 | 南缘折线是 2025 年发现的示意，不是测绘线 |
+| 文献尺度 | 殿庭按五百步 × 五十丈、秦尺 0.231 m | 秦尺与「文献尺寸小于台基」的解释都不是定论 |
+| 明确未采用 | 王贵祥《消逝的辉煌》第一章 | 未取得正文，未采用其结论 |
+| 截图与碰撞记录 | `tools/shots.mjs` 等脚本；仓库内现有 7 张截图 | 记录的是软件渲染检查，不是 GPU 帧率，也不是考古验收 |
 
-`tools/shots.mjs`（Playwright + Chrome 无头，SwiftShader 软件渲染）生成 `shots/` 下 16 张截图，并用固定步长模拟漫游检验碰撞：
+<details>
+<summary><strong>尺度、材料与重新截图 / Dimensions and captures</strong></summary>
 
-- 坡道脚下北行 9 s → y 从 0 升到 12（登上台基）
-- 殿庭北行 → 上踏道 → 穿殿门 → 停在御座台上（y 18.5）
-- 殿内向北墙直走 → 停在 z = −131（墙内侧 −131.55）
-- 台上向西 → 被西墙挡住（x = −619，y = 12）
+完整换算、来源和【推测】清单在 [`brief.md`](brief.md)。页面里用到的主要尺寸：
 
-场景约 71.5 万三角形、298 个网格、约 360 次绘制调用；软件渲染下约 1 fps，实际 GPU 上流畅。
+- 台基 1270 × 426 × 12 m（考古）。页面多边形面积 525,940 ㎡，与报道约 54.1 万 ㎡ 的差值来自折线示意。
+- 殿庭 693 × 115.5 m，位于台基北半中轴。主殿柱网、二层台、配殿、阙、阁道与复道均为【推测】。
+- 庑殿顶无鸱尾。二层台作三级夯土台座，构图只借鉴中轴、层台和阶道，不把影视城照片当作证据。
+- 材料是程序化贴图：夯土、筒瓦板瓦、云纹瓦当、朱漆柱、黑漆梁枋、方砖、漆屏、青铜灯。没有外部照片贴图。
+- 日照按西安（34.2°N）约 10 月 14 日计算。阴影范围随视点收放。`?q=low` 关闭 AO 与泛光。
 
-重新截图：`cd tools && npm i && node shots.mjs`（需要 `/usr/bin/google-chrome`）。
+重新截图（需要本机 Chrome）：
 
-## 推测与简化（重要）
+```sh
+cd tools && npm i && node shots.mjs
+```
 
-秦尺取值、开间数、台基原高、阁道走向均无直接证据；殿内陈设、壁画题材、阙楼与回廊形制均为推想。王贵祥《消逝的辉煌》第一章第一节专论阿房宫前殿，本作品**未取得正文、未采用其结论**，获取后应据以修订开间、殿身与屋顶。
+分层、陈设与真实度镜头还有 `shots_layers.mjs`、`shots_decor.mjs`、`shots_real.mjs`。
 
-## 秦式陈设（2026-10 增补，均为【推测】）
-殿内：御座台前青铜鼎一对、壶四件（黑漆几座）；跪坐人形铜灯四具；漆案十二张（黑漆朱缘）配席与耳杯；御座方帐（黑帐顶、深红帷幔、束帷）；西侧曲尺编钟架（甬钟 2 × 12）；东侧玉璧架与兰锜兵器架；殿内黑旗四面；梁枋两面云纹 + 篦纹彩画带（褪色）。
-殿门：每扇门板两面铺首衔环。檐口：檐角与檐口风铎。殿庭：南口大鼎一对，中轴与坡道两侧黑旗列。
-重复构件全部 `InstancedMesh` 实例化；新部件均参与「拆解」与碰撞。
+</details>
 
-## 气势与构图（大气磅礴）
-- 二层台改为**三级夯土台座**（总高仍 5 m，层层收进、瓦顶压边）+ 中央踏道与东西两道副踏道；构图参考现代秦汉影视城照片，**仅借鉴中轴、层台、阶道的构图，不作历史证据**；未采用后世起翘檐角与石作台阶。
-- 主殿正脊加高为叠瓦脊并设脊端垒瓦（仍无鸱尾）；屋面下新增檩、椽、梁架（逐层拆解时可见）。
-- 人物比例尺：身高 1.7 m 的卫士、仪仗与百官方阵（实例化，约 1700 人）。
-- 天空加程序化云层；北面加渭北台塬远影；`cine()` 电影模式（隐藏界面、加深天空）。
-- 新视角：`heroAxis`（殿庭低机位仰视）、`axis`（中轴低空俯瞰）、`hero`（坡道脚下）。
+<a id="contribute"></a>
 
-## 逐层拆解（参照 human-atlas 的图层交互）
-右侧「逐层拆解」面板，9 层由上而下：
-1 屋面瓦 → 2 屋顶木构 / 斗栱 → 3 梁枋 → 4 柱网 → 5 墙体门窗 → 6 室内陈设 → 7 台上附属（回廊·阙·阁道·旗·人物）→ 8 二层台 → 9 夯土台基
-- 每层：色点 + 名称 + 部件数 + 开关；点名称 =「仅显示此层」。
-- 预设：全部 / 仅主体木构 / 仅台基；底栏「N 层可见 · M 组部件」+「全部隐藏」。
-- 滑杆 0–9：由上而下移除前 k 层；「▶ 逐层拆解」自动逐层上升移除；「全部炸开」= 原拆解模式；「全部装配」自下而上逐层落位动画。
-- 画面底部状态字幕（完整复原 / 已移除 k 层 · 当前顶层 / 全部拆解 · 部件陈列 / 逐层装配）。
-- 漫游、复位会自动恢复全部图层；被移除部件的标注自动隐藏；剖切与标注照常。
+## 文档与边界 · Notes
 
-脚本钩子：`__app.peel(k)`、`setLayers(fn)`、`playPeel()`、`assembleAll()`、`settleLayers()`、`assembleAt(t)`、`cine(on, fov)`。
-截图：`tools/shots_layers.mjs`（17、18、19_layers_step1–9、20_hero_grand、20b_hero_low、21_axis_approach、22_cut_labels）。
+欢迎修正尺度引用、来源链接和交互问题。请把考古事实和设计推测分开写。
 
-## 真实度提升（2026-10-14）
-备份：`index_backup_pre_realism.html`。
-- 日照：按西安（34.2°N）10 月 14 日（赤纬约 −8.4°）计算太阳高度与方位（修正了旧版上午太阳在西的问题）；低日更暖更弱；雾色随时辰变化。
-- 天空：程序化云层 + 朝日方位的地平暖光 + 地平雾带；远景起伏地形环（台塬、冲沟）在雾中渐隐。
-- 阴影：阴影贴图视锥随视点收放（近景约 70 m 见方高精度，远景 760 m 全覆盖），PCF 软阴影。
-- 后期：GTAO 环境光遮蔽（剖切时自动关闭）→ 仅灯焰泛光（高阈值，只有 HDR 灯焰会溢光）→ ACES 输出 → 自然调色（略降饱和、轻微对比、暗部微暖、轻暗角）。`?q=low` 可关闭 AO 与泛光。
-- 程序化细节（世界坐标着色，无额外贴图）：夯土冲沟与雨痕、坑洼、基脚潮痕；屋瓦逐瓦明暗、苔、尘；漆木纹理；石础崩口与色斑；地面尘土 / 草 / 干草大尺度斑块。
-- 近景 LOD：主殿屋面真实筒瓦垄（约 900 根实例），距离 480 m 内显示。
-- 低机位主视角 `heroAxis` 重新取景（殿庭内仰视三级台座与主殿）。
+| 你想了解什么 | 从这里进入 |
+| --- | --- |
+| 依据与尺度 | [设计说明 brief.md](brief.md) |
+| English | [English page](docs/英文说明v1.0.md) |
+| 在线页面 | [tuanziding.github.io/epang-palace](https://tuanziding.github.io/epang-palace/) |
+| 发布工作流 | [pages.yml](.github/workflows/pages.yml) |
+| 问题 | [GitHub Issues](https://github.com/TUANZIDING/epang-palace/issues) |
+
+---
+
+<p align="center">
+  <strong>阿房宫前殿 · Epang Palace Front Hall</strong><br>
+  台基是考古留下的。台上的房子是一次可以走进去的假说。<br>
+  <a href="https://github.com/TUANZIDING">TUANZIDING</a> · <a href="brief.md">设计说明</a> · <a href="https://github.com/AirsupHQ/machine-skill">machine-skill</a>
+</p>
+
+<sub>本仓库没有单独的 LICENSE 文件。交互模式参照 machine-skill（MIT）的 lab-kit 另写，没有把它的代码内联进来。文献与考古报道只保留出处，不收录原文全文。界面参照不表示那些项目为本复原背书。</sub>
