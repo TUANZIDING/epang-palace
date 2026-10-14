@@ -1,0 +1,28 @@
+import { chromium } from 'playwright-core'
+import { resolve } from 'node:path'
+const page_url = 'file://' + resolve('../index.html')
+const OUT = resolve('../shots')
+const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] })
+const page = await browser.newPage({ viewport: { width: 1600, height: 900 } })
+page.on('pageerror', (e) => console.log('PAGE ERROR', e.message))
+page.on('console', (m) => { if (m.type() === 'error') console.log('CONSOLE', m.text().slice(0, 300)) })
+await page.goto(page_url, { waitUntil: 'load', timeout: 120000 })
+await page.waitForFunction(() => window.__app?.ready, null, { timeout: 120000 })
+await page.evaluate(() => document.fonts.ready)
+await page.evaluate(() => window.__app.skipIntro())
+const wait = (ms) => page.waitForTimeout(ms)
+const shot = async (name, js, ms = 2500) => { if (js) await page.evaluate(js); await wait(ms); await page.screenshot({ path: `${OUT}/${name}.png` }); console.log('shot', name) }
+console.log(JSON.stringify(await page.evaluate(() => window.__app.info())))
+await shot('04_hall', () => { __app.setView('hall'); __app.snap({ explode: 0, cut: 0, labels: 0 }); __app.setHour(9.5) }, 3500)
+await shot('05_eave_wadang_dougong', () => { __app.setView('eave') }, 3000)
+await page.evaluate(() => { __app.setHour(10); __app.setWalk(true) })
+await shot('13_walk_hall_entrance', () => { __app.walkTo(-1.5, -70, 0, 0.06) }, 2800)
+await shot('14_walk_interior_throne', () => { __app.walkTo(0, -98, 0, 0.06) }, 2800)
+await shot('15_walk_interior_murals', () => { __app.walkTo(-60, -110, Math.PI * 0.62, 0.02) }, 2800)
+await shot('16_walk_lamps_screens', () => { __app.walkTo(6, -120, 0.3, -0.06) }, 2800)
+// quick mode smoke: explode still works after material change
+await page.evaluate(() => { __app.setWalk(false); __app.snap({ explode: 1 }); __app.setView('explode') })
+await wait(2000)
+const st = await page.evaluate(() => ({ explode: __app.STATE.explode, walk: __app.STATE.walk }))
+console.log('mode smoke', st)
+await browser.close()

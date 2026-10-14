@@ -1,0 +1,22 @@
+import { chromium } from 'playwright-core'
+import { resolve } from 'node:path'
+const OUT = resolve('../shots')
+const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] })
+const page = await browser.newPage({ viewport: { width: 1600, height: 900 } })
+page.on('pageerror', (e) => console.log('PAGE ERROR', e.message))
+page.on('console', (m) => { if (m.type() === 'error') console.log('CONSOLE', m.text().slice(0, 300)) })
+await page.goto('file://' + resolve('../index.html'), { waitUntil: 'load', timeout: 120000 })
+await page.waitForFunction(() => window.__app?.ready, null, { timeout: 180000 })
+await page.evaluate(() => window.__app.skipIntro())
+const shot = async (name, js, ms = 3000) => { if (js) await page.evaluate(js); await page.waitForTimeout(ms); await page.screenshot({ path: `${OUT}/${name}.png` }); console.log('shot', name) }
+console.log(JSON.stringify(await page.evaluate(() => window.__app.info())))
+await page.evaluate(() => { __app.snap({ explode: 0, cut: 0, labels: 0 }); __app.setHour(10); __app.setWalk(true) })
+await shot('14_walk_interior_throne', () => __app.walkTo(0, -98, 0, 0.06))
+await shot('16_walk_lamps_screens', () => __app.walkTo(6, -120, 0.3, -0.06))
+await shot('17_decor_throne', () => __app.walkTo(0, -104, 0, 0.08))
+await shot('18_decor_bells', () => __app.walkTo(-43.7, -99, 0.42, 0.04))
+await page.evaluate(() => __app.setWalk(false))
+await shot('19_decor_exterior', () => { __app.setView('hall'); __app.snap({ labels: 1 }) }, 3500)
+await shot('20_decor_explode', () => { __app.snap({ explode: 1, labels: 0 }); __app.setView('explode') }, 3500)
+console.log('state', JSON.stringify(await page.evaluate(() => ({ e: __app.STATE.explode, w: __app.STATE.walk }))))
+await browser.close()
