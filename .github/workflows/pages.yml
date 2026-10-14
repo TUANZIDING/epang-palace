@@ -1,3 +1,9 @@
+# Publishes root index.html to GitHub Pages.
+# configure-pages cannot create the site by itself: enablement needs a
+# token with administration:write, which this repo's Actions token does not
+# have. A repo admin must set Settings → Pages → Source to GitHub Actions
+# once. After that, this workflow's deploy step can succeed.
+
 name: Publish site
 
 on:
