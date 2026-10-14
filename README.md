@@ -19,7 +19,7 @@
   <a href="https://tuanziding.github.io/epang-palace/">https://tuanziding.github.io/epang-palace/</a>
 </p>
 
-<p align="center"><sub>Pages API 返回 HTTP 403，当前凭据不能直接开通站点。推送到 <code>main</code> 后由 <a href=".github/workflows/pages.yml">pages.yml</a> 发布根目录的 <code>index.html</code>。上面的地址在该工作流成功后才会打开。</sub></p>
+<p align="center"><sub>在线地址还没有生效。开通 Pages 的 API 返回 HTTP 403；<a href="https://github.com/TUANZIDING/epang-palace/actions/workflows/pages.yml">Publish site</a> 已跑过，并在 Configure Pages 停在 “Get Pages site failed”（仓库尚未把 Pages 设为 GitHub Actions）。请仓库管理员打开 Settings → Pages，Source 选 GitHub Actions，然后重跑该工作流。<code>pages.yml</code> 会把根目录的 <code>index.html</code> 发到上面的地址。</sub></p>
 
 <p align="center">
   <a href="README.md">简体中文</a> · <a href="docs/英文说明v1.0.md">English</a>
