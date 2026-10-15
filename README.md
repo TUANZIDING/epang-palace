@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="shots/20_hero_grand.png" width="100%" alt="复原假说的实际截图：殿庭低机位望向三级台座与庑殿顶主殿，台下有黑旗与人物">
+  <img src="shots/27_surroundings_hero.png" width="100%" alt="复原假说的实际截图：坡下低机位望向台基、宫墙、柏列与庑殿顶主殿">
 </p>
 
 <h1 align="center">阿房宫前殿 · Epang Palace Front Hall</h1>
@@ -19,7 +19,7 @@
   <a href="https://tuanziding.github.io/epang-palace/">https://tuanziding.github.io/epang-palace/</a>
 </p>
 
-<p align="center"><sub>在线地址还没有生效。开通 Pages 的 API 返回 HTTP 403；<a href="https://github.com/TUANZIDING/epang-palace/actions/workflows/pages.yml">Publish site</a> 已跑过，并在 Configure Pages 停在 “Get Pages site failed”（仓库尚未把 Pages 设为 GitHub Actions）。请仓库管理员打开 Settings → Pages，Source 选 GitHub Actions，然后重跑该工作流。<code>pages.yml</code> 会把根目录的 <code>index.html</code> 发到上面的地址。</sub></p>
+<p align="center"><sub>推到 <code>main</code> 后，<a href="https://github.com/TUANZIDING/epang-palace/actions/workflows/pages.yml">Publish site</a> 把根目录的 <code>index.html</code> 发到上面的地址。</sub></p>
 
 <p align="center">
   <a href="README.md">简体中文</a> · <a href="docs/英文说明v1.0.md">English</a>
@@ -30,7 +30,7 @@
 </p>
 
 <p align="center">
-  <code>three.js 单文件</code> · <code>逐层拆解</code> · <code>炸开 / 剖切</code> · <code>第一人称漫游</code>
+  <code>three.js 单文件</code> · <code>逐层拆解</code> · <code>入殿视点</code> · <code>第一人称漫游</code>
 </p>
 
 <p align="center">
@@ -52,7 +52,7 @@
 | 先看整体，再走进殿内 | 打开[在线页面](https://tuanziding.github.io/epang-palace/)，或直接打开 [`index.html`](index.html) |
 | 像解剖图谱一样逐层拆开 | 右侧「逐层拆解」：屋面 → 木构 → 梁枋 → 柱网 → 墙体 → 陈设 → 台上附属 → 二层台 → 夯土台基 |
 | 核对哪些是考古、哪些是推测 | 按 `I` 打开史料；尺度与【推测】清单见 [`brief.md`](brief.md) |
-| 沿中轴走一遍 | 按 `F`：坡道脚下 → 南坡道 → 殿庭 → 踏道 → 前殿 |
+| 沿中轴走一遍，或直接飞进殿内 | 按 `F` 漫游；或点画面下方「入殿」：殿庭 → 殿门 → 殿心 → 西夹 → 东序 → 阁上 |
 
 <a id="showcase"></a>
 
@@ -65,12 +65,17 @@
 | [![台基、南坡道、殿庭与主殿的高空中轴截图](shots/21_axis_approach.png)](https://tuanziding.github.io/epang-palace/) | [![屋顶、柱、墙与陈设沿装配方向分开的截图](shots/19_layers_step8_explode.png)](https://tuanziding.github.io/epang-palace/) |
 | [打开页面](https://tuanziding.github.io/epang-palace/) | [打开页面](https://tuanziding.github.io/epang-palace/) |
 
-| 总览 | 殿内第一人称 |
+| 总览 | 殿心（入殿） |
 | --- | --- |
-| [![夯土台基与主殿、配殿、四角阙的总览截图](shots/01_overview.png)](shots/01_overview.png) | [![殿内朝北望向屏风与御座台的漫游截图](shots/14_walk_interior_throne.png)](shots/14_walk_interior_throne.png) |
-| [查看大图](shots/01_overview.png) | [查看大图](shots/14_walk_interior_throne.png) |
+| [![夯土台基、主殿与周围宫室的总览截图](shots/01_overview.png)](shots/01_overview.png) | [![从殿心望向御座、屏风与帷帐](shots/24_tour_center.png)](shots/24_tour_center.png) |
+| [查看大图](shots/01_overview.png) | [查看大图](shots/24_tour_center.png) |
 
-<sub>另有全层装配 <code>shots/19_layers_step1_full.png</code> 与近景陈设 <code>shots/17_decor_throne.png</code>。画面中的瓦当、漆木、屏风、编钟和人物都是【推测】。</sub>
+| 殿门内 | 上层阁道 |
+| --- | --- |
+| [![站在南面五间门内望向殿心](shots/23_tour_door.png)](shots/23_tour_door.png) | [![南面阁道俯视列柱与御座](shots/26_tour_gallery.png)](shots/26_tour_gallery.png) |
+| [查看大图](shots/23_tour_door.png) | [查看大图](shots/26_tour_gallery.png) |
+
+<sub>另有殿庭 <code>shots/22_tour_court.png</code>、西夹 <code>shots/25_tour_west.png</code>、坡下全景 <code>shots/27_surroundings_hero.png</code>，以及全层装配 <code>shots/19_layers_step1_full.png</code>。瓦当、漆木、屏风、编钟、周围宫室和林木都是【推测】。</sub>
 
 <a id="quick-start"></a>
 
@@ -100,6 +105,7 @@ python3 -m http.server 8080 --bind 127.0.0.1
 | 剖切 | `C` | 沿中轴东侧 4.5 m 纵剖，剖面为红色斜线 |
 | 标注 | `L` | 中文引线；【推测】项单独注明 |
 | 漫游 | `F` | `WASD` / 方向键，鼠标环视，`Shift` 疾行，空格跳，`Esc` 或再按 `F` 退出 |
+| 入殿 | 画面下方 · `[` `]` | 殿庭 → 殿门 → 殿心 → 西夹 → 东序 → 阁上。飞入后镜头轻轻环视，拖拽可自己看。再按 `F` 就从该处步行 |
 | 史料 | `I` | 依据、尺度换算、推测项与来源 |
 | 复位 | `R` | 回到总览，并恢复全部图层 |
 | 时辰 | 滑块 | 06:00–18:00，按西安纬度计算日光方向与色温 |
@@ -117,7 +123,7 @@ python3 -m http.server 8080 --bind 127.0.0.1
 | --- | --- |
 | 只看考古还能支撑的部分 | 预设「仅台基」，或滑杆拆到夯土台基 |
 | 看木构怎么叠起来 | 「仅主体木构」，或「全部装配」自下而上落位 |
-| 看殿内陈设 | 漫游进入前殿；鼎、灯、漆案、屏风、编钟、帷帐均可被拆开，也会挡住行走 |
+| 看殿内陈设 | 「入殿」依次站到殿门、殿心、两序和阁上；或按 `F` 走进去。鼎、灯、漆案、屏风、编钟、帷帐可被拆开，也会挡住行走 |
 | 给脚本或截图用 | `window.__app`：`peel`、`setLayers`、`playPeel`、`assembleAll`、`cine` |
 
 <a id="capabilities"></a>
@@ -130,7 +136,7 @@ python3 -m http.server 8080 --bind 127.0.0.1
 | 考古底座 | 夯土台基约 1270 × 426 × 12 m；西、北、东墙，南面敞开 | 南缘折线是 2025 年发现的示意，不是测绘线 |
 | 文献尺度 | 殿庭按五百步 × 五十丈、秦尺 0.231 m | 秦尺与「文献尺寸小于台基」的解释都不是定论 |
 | 明确未采用 | 王贵祥《消逝的辉煌》第一章 | 未取得正文，未采用其结论 |
-| 截图与碰撞记录 | `tools/shots.mjs` 等脚本；仓库内现有 7 张截图 | 记录的是软件渲染检查，不是 GPU 帧率，也不是考古验收 |
+| 截图与碰撞记录 | `tools/shots.mjs`、`tools/shots_tour.mjs`；入殿镜头在 `shots/22`–`shots/27` | 记录的是软件渲染检查，不是 GPU 帧率，也不是考古验收 |
 
 <details>
 <summary><strong>尺度、材料与重新截图 / Dimensions and captures</strong></summary>
@@ -146,10 +152,10 @@ python3 -m http.server 8080 --bind 127.0.0.1
 重新截图（需要本机 Chrome）：
 
 ```sh
-cd tools && npm i && node shots.mjs
+cd tools && npm i playwright-core && node shots.mjs
 ```
 
-分层、陈设与真实度镜头还有 `shots_layers.mjs`、`shots_decor.mjs`、`shots_real.mjs`。
+入殿与周围宫室镜头：`node shots_tour.mjs`（写出 `shots/22_tour_court.png` 至 `shots/27_surroundings_hero.png`）。分层、陈设与真实度镜头还有 `shots_layers.mjs`、`shots_decor.mjs`、`shots_real.mjs`。
 
 </details>
 

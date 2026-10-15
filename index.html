@@ -78,11 +78,19 @@ html.walk .side{background:rgba(243,238,228,.82);padding:12px 14px;border-radius
 .layers input[type=range]{width:100%;accent-color:#1d1a16}
 .layers .act3{display:flex;gap:4px;margin:4px}.layers .act3 button{flex:1}
 .layers .ft{display:flex;justify-content:space-between;align-items:center;color:var(--mute);font-size:11px;padding:4px 4px 0;border-top:1px solid var(--line);margin-top:4px}
-.caption{position:absolute;left:50%;bottom:84px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;font:11px "JetBrains Mono",monospace;letter-spacing:.14em;color:var(--ink);opacity:.75;white-space:nowrap}
+.caption{position:absolute;left:50%;bottom:168px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;font:11px "JetBrains Mono",monospace;letter-spacing:.14em;color:var(--ink);opacity:.75;white-space:nowrap}
 .caption i{display:block;width:40px;height:1px;background:var(--ink);opacity:.5}
+.tour{position:absolute;left:50%;bottom:74px;transform:translateX(-50%);z-index:4;display:flex;flex-direction:column;align-items:center;gap:4px;max-width:calc(100vw - 20px)}
+.tour .row{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;background:rgba(243,238,228,.94);backdrop-filter:blur(6px);padding:5px;border-radius:14px;border:1px solid var(--line)}
+.tour .hd{font:12.5px "Noto Serif SC",serif;font-weight:700;padding:6px 8px;white-space:nowrap}
+.tour button{font:12.5px "Noto Sans SC",sans-serif;border:0;background:transparent;padding:6px 8px;border-radius:9px;cursor:pointer;color:var(--ink)}
+.tour button:hover{background:rgba(0,0,0,.05)}
+.tour button.on{background:var(--ink);color:var(--paper)}
+.tour button.nav{font:11px "JetBrains Mono",monospace}
+.tour .note{font-size:12px;line-height:1.45;text-align:center;background:rgba(243,238,228,.92);border:1px solid var(--line);border-radius:999px;padding:4px 12px;max-width:min(760px,calc(100vw - 28px))}
 html.walk .layers,html.walk .caption,html.info-on .layers{display:none}
-html.cine .side,html.cine .layers,html.cine .caption,html.cine .pills,html.cine .scale,html.cine .modes,html.cine .honest{display:none}html.cine .prompt{left:50%;transform:translateX(-50%);top:auto;bottom:34px;font-size:14px}
-@media (max-width:900px){.side{width:260px}.title{font-size:34px}.info{width:300px}.honest{display:none}}
+html.cine .side,html.cine .layers,html.cine .caption,html.cine .pills,html.cine .scale,html.cine .modes,html.cine .honest,html.cine .tour{display:none}html.cine .prompt{left:50%;transform:translateX(-50%);top:auto;bottom:34px;font-size:14px}
+@media (max-width:900px){.side{width:260px}.title{font-size:34px}.info{width:300px}.honest{display:none}.caption{display:none}.tour{bottom:64px}}
 </style>
 </head>
 <body>
@@ -107,13 +115,14 @@ html.cine .side,html.cine .layers,html.cine .caption,html.cine .pills,html.cine 
     </div>
   </div>
   <div class="modes"></div>
+  <div class="tour"></div>
   <div class="layers"></div>
   <div class="caption"><i></i><span></span><i></i></div>
   <div class="info"></div>
-  <div class="honest"><b>历史说明：</b>考古表明阿房宫前殿<b>只筑成夯土台基，宫殿从未建成</b>，也未见大规模焚烧遗迹。台上建筑均为复原假说，非史实再现。按 <kbd>I</kbd> 查看依据。</div>
+  <div class="honest"><b>历史说明：</b>考古表明阿房宫前殿<b>只筑成夯土台基，宫殿从未建成</b>，也未见大规模焚烧遗迹。台上建筑、周围宫室与林木均为复原假说，非史实再现。按 <kbd>I</kbd> 查看依据。</div>
   <div class="scale"><span></span><div></div></div>
   <div class="cross"></div>
-  <div class="walkhint">漫游：WASD 移动 · 鼠标环视（点击画面锁定）· Shift 疾行 · 空格跳 · Esc / F 退出</div>
+  <div class="walkhint">漫游：WASD 移动 · 鼠标环视 · Shift 疾行 · 空格跳 · Esc / F 退出 · 下方「入殿」可直接飞到殿内各处</div>
 </div>
 <script type="module">
 import * as THREE from 'three'
@@ -478,6 +487,11 @@ const M = {
   cloth: patch(new THREE.MeshStandardMaterial({ color: 0x5e1f17, roughness: 0.95, side: THREE.DoubleSide }), { cap: false }),
   clothBlack: patch(new THREE.MeshStandardMaterial({ color: 0x1c1816, roughness: 0.95, side: THREE.DoubleSide }), { cap: false }),
   beamBand: null,
+  leaf: patch(new THREE.MeshStandardMaterial({ color: 0x243228, roughness: 1, metalness: 0 })),
+  leafW: patch(new THREE.MeshStandardMaterial({ color: 0x4d5a32, roughness: 1, metalness: 0 })),
+  trunk: patch(new THREE.MeshStandardMaterial({ color: 0x5c4a38, roughness: 1, metalness: 0 })),
+  clay: patch(new THREE.MeshStandardMaterial({ color: 0x7a5842, roughness: 1, metalness: 0 })),
+  pot: patch(new THREE.MeshStandardMaterial({ color: 0x6a5044, roughness: 0.96, metalness: 0 })),
 }
 
 /* 部件注册：拆解 / 装配（lab-kit explode 模式） */
@@ -764,7 +778,7 @@ part(mainRoof, [0, 200, 0], '庑殿顶')
   const fl = instanced(new THREE.ConeGeometry(0.09, 0.32, 10).translate(0, 0.16, 0), M.flame, flames); fl.userData.noShadow = true; g.add(fl)
   // 殿内：暖而暗的尘雾灯火（弱、近、高衰减），避免现代射灯感
   for (const [x, z] of [[-8, zc - 2.5], [8, zc - 2.5], [0, zc + 4], [-9, HALL.z + 5], [9, HALL.z + 5], [-9, HALL.z + 18], [9, HALL.z + 18]]) { const L = new THREE.PointLight(0xd4a060, 38, 28, 1.9); L.position.set(x, FLOOR + 2.6, z); g.add(L) }
-  const ambIn = new THREE.AmbientLight(0x9a8a70, 0.38); g.add(ambIn)
+  const ambIn = new THREE.AmbientLight(0xb7a48c, 0.72); g.add(ambIn)
   part(g, [0, 60, 0], '殿内陈设')
 }
 
@@ -841,6 +855,33 @@ const DECOR = {}
   for (let r = 0; r < HALL.rows; r++) for (const sd of [-1, 1]) { const pg = new THREE.PlaneGeometry(L, 0.42); const a = pg.attributes.uv.array; for (let i = 0; i < a.length; i += 2) a[i] *= L / 6; if (sd < 0) pg.rotateY(Math.PI); pg.translate(0, by, hallZ(r) + sd * 0.285); geos.push(pg) }
   const band = new THREE.Mesh(mergeGeometries(geos), M.beamBand); band.userData.noShadow = true
   part(new THREE.Group().add(band), [0, 120, 0], '梁枋彩画')
+}
+/* ===== 3c. 上层阁道【推测】：台榭依壁架木，可俯视殿心 ===== */
+{
+  const g = new THREE.Group()
+  const S = HALL.z + HALL.d / 2, N = HALL.z - HALL.d / 2
+  const GY = FLOOR + 3.05, yR = GY + 0.55
+  const deck = (w, h, d, x, y, z) => box(w, h, d, M.black, x, y, z)
+  g.add(deck(144, 0.16, 2.5, 0, GY, -79.95))
+  g.add(deck(2.3, 0.16, 48, -70, GY, -105.2))
+  g.add(deck(2.3, 0.16, 48, 70, GY, -105.2))
+  g.add(deck(50, 0.16, 2.1, -46, GY, -130.15))
+  g.add(deck(50, 0.16, 2.1, 46, GY, -130.15))
+  const rail = (w, d, x, z) => g.add(box(w, 0.12, d, M.verm, x, GY + 1.05, z))
+  rail(144, 0.1, 0, -81.15); rail(0.1, 48, -68.9, -105.2); rail(0.1, 48, 68.9, -105.2)
+  rail(50, 0.1, -46, -129.15); rail(50, 0.1, 46, -129.15)
+  const posts = []
+  for (let x = -68; x <= 68; x += 4.2) posts.push(mtx(x, yR, -81.15))
+  for (let z = -128; z <= -84; z += 4.2) { posts.push(mtx(-68.9, yR, z)); posts.push(mtx(68.9, yR, z)) }
+  const pi = instanced(new THREE.BoxGeometry(0.12, 1.05, 0.12), M.verm, posts); pi.userData.noShadow = true; g.add(pi)
+  const steps = [], n = 12, run = 0.48, rise = 3.05 / n
+  for (let i = 0; i < n; i++) steps.push(boxGeo(run, rise * (i + 1), 1.5, -62.2 - i * run, FLOOR + rise * (i + 1) / 2, -96))
+  const sm = new THREE.Mesh(mergeGeometries(steps), M.earthStep); g.add(sm); FLOORS.push(sm)
+  g.add(box(0.12, 1.0, 1.5, M.verm, -68.2, GY + 0.5, -96))
+  for (const [x, z] of [[-28, -82.4], [28, -82.4], [-55, -100], [55, -108]]) {
+    const L = new THREE.PointLight(0xe4d0ae, 22, 34, 1.7); L.position.set(x, FLOOR + 4.2, z); g.add(L)
+  }
+  part(g, [0, 90, 0], '上层阁道')
 }
 /* ===== 4. 东西配殿、回廊、角阙 ===== */
 function sideHall(x) {
@@ -969,7 +1010,135 @@ const FLAGS = []
   g.position.set(0, EAVE_Y, HALL.z)
   part(g, [0, 165, 0], '屋顶木构')
 }
-/* ===== 6d. 人物比例尺：仪仗、百官、卫士（1.7 m，【推测】） ===== */
+/* ===== 6d. 周围宫室、宫墙、林木、路径与杂器【推测】 ===== */
+{
+  const g = new THREE.Group(), y0 = T.H
+  const annex = (x, z, w, d, ch, rise, { wadang = false, longZ = false } = {}) => {
+    const body = box(w - 1.6, ch, d - 1.6, M.white, x, y0 + ch / 2, z); g.add(body); WALLS.push(body)
+    g.add(box(w - 1.2, 0.22, d - 1.2, M.verm, x, y0 + ch * 0.62, z))
+    g.add(box(w - 1.2, 0.16, d - 1.2, M.verm, x, y0 + 0.2, z))
+    const rw = longZ ? d : w, rd = longZ ? w : d
+    const r = hipRoof(rw + 1.4, rd + 1.4, rise, { ridgeLen: Math.max(2, rw - rd), wadang, spacing: 0.8 })
+    if (longZ) r.rotation.y = Math.PI / 2
+    r.position.set(x, y0 + ch + 0.2, z); g.add(r)
+    const cols = []
+    for (const sx of [-1, 1]) for (const sz of [-1, 1]) cols.push(mtx(x + sx * (w / 2 - 1), y0 + ch / 2, z + sz * (d / 2 - 1)))
+    const ci = instanced(new THREE.CylinderGeometry(0.26, 0.28, ch, 8), M.verm, cols); ci.userData.noShadow = true; g.add(ci)
+  }
+  annex(158, HALL.z, 42, 26, 5.4, 4.2, { wadang: true })
+  annex(-158, HALL.z, 42, 26, 5.4, 4.2, { wadang: true })
+  annex(0, -186, 58, 26, 5.2, 4.4, { wadang: true })
+  annex(500, -20, 24, 168, 4.6, 3.1, { longZ: true })
+  annex(-500, -20, 24, 168, 4.6, 3.1, { longZ: true })
+  for (const x of [-230, 230]) { annex(x, 108, 36, 20, 4.4, 3.2); annex(x, -168, 32, 20, 4.2, 3) }
+  annex(360, 70, 40, 22, 4.6, 3.4); annex(-360, 70, 40, 22, 4.6, 3.4)
+  annex(175, -28, 16, 10, 3.2, 1.8); annex(-175, -28, 16, 10, 3.2, 1.8)
+  { // 司马门：中轴开口，屋顶跨过门道
+    const gap = 12, bw = 9, bh = 6.2, gz = 62
+    for (const sx of [-1, 1]) { const body = box(bw, bh, 11, M.white, sx * (gap / 2 + bw / 2), y0 + bh / 2, gz); g.add(body); WALLS.push(body); g.add(box(bw + 0.4, 0.22, 11.4, M.verm, sx * (gap / 2 + bw / 2), y0 + bh * 0.62, gz)) }
+    const r = hipRoof(gap + bw * 2 + 6, 16, 3.4, { ridgeLen: gap + 2, wadang: true, spacing: 0.7 }); r.position.set(0, y0 + bh + 0.15, gz); g.add(r)
+    for (const sx of [-1, 1]) g.add(box(0.35, bh, 0.35, M.verm, sx * (gap / 2 - 0.4), y0 + bh / 2, gz + 5.2), box(0.35, bh, 0.35, M.verm, sx * (gap / 2 - 0.4), y0 + bh / 2, gz - 5.2))
+  }
+  { // 主殿宫墙：南面开门，东西各留侧门
+    const wt = 1.5, wh = 3.7
+    const add = (w, d, x, z) => { const m = box(w, wh, d, M.earth, x, y0 + wh / 2, z); g.add(m, box(w + 0.3, 0.28, d + 0.3, M.ridge, x, y0 + wh + 0.12, z)); WALLS.push(m) }
+    add(178, wt, -99, 86); add(178, wt, 99, 86)
+    add(178, wt, -99, -204); add(178, wt, 99, -204)
+    add(wt, 120, -188, 25); add(wt, 120, -188, -143)
+    add(wt, 120, 188, 25); add(wt, 120, 188, -143)
+  }
+  { // 石径：中轴与通向厢房
+    const paths = []
+    paths.push(boxGeo(7.2, 0.08, 88, 0, y0 + 0.08, 16))
+    paths.push(boxGeo(7.2, 0.08, 36, 0, y0 + 0.08, -48))
+    paths.push(boxGeo(36, 0.08, 3.2, 128, y0 + 0.08, HALL.z))
+    paths.push(boxGeo(36, 0.08, 3.2, -128, y0 + 0.08, HALL.z))
+    paths.push(boxGeo(3.2, 0.08, 22, 0, y0 + 0.08, -172))
+    const pm = new THREE.Mesh(mergeGeometries(paths), M.stone); pm.userData.noShadow = true; g.add(pm)
+  }
+  // 短廊，把东西厢接到主殿台座外侧
+  for (const sx of [-1, 1]) {
+    const cx = sx * 124, L = 28
+    g.add(box(L, 0.25, 4.2, M.earthStep, cx, y0 + 0.16, HALL.z))
+    g.add(box(L, 0.35, 0.35, M.black, cx, y0 + 4.3, HALL.z + 1.7), box(L, 0.35, 0.35, M.black, cx, y0 + 4.3, HALL.z - 1.7))
+    const r = hipRoof(L + 1, 6.2, 1.6, { ridgeLen: L - 5, wadang: false }); r.position.set(cx, y0 + 4.55, HALL.z); g.add(r)
+    const posts = []; for (let i = 0; i <= 6; i++) for (const o of [-1.6, 1.6]) posts.push(mtx(cx - L / 2 + i * L / 6, y0 + 2.1, HALL.z + o))
+    const pi = instanced(new THREE.CylinderGeometry(0.16, 0.18, 4.2, 8), M.verm, posts); pi.userData.noShadow = true; g.add(pi)
+  }
+  part(g, [0, 36, 0], '周围宫室')
+
+  // 林木：松、柏、柳。轴线上留出步道。程序化几何，不引用外部贴图。
+  const Rn = rng(909)
+  const pines = [], cypress = [], willows = []
+  const spot = (x, z) => {
+    if (Math.abs(x) < 15 && z > -55 && z < 210) return false
+    if (Math.abs(x) < 42 && z > 175 && z < 280) return false
+    if (Math.abs(x) < 125 && z > -165 && z < -55) return false
+    if (Math.hypot(x - 158, z - HALL.z) < 30 || Math.hypot(x + 158, z - HALL.z) < 30) return false
+    if (Math.hypot(x, z + 186) < 36) return false
+    if (Math.abs(z - 62) < 12 && Math.abs(x) < 22) return false
+    if (Math.abs(x) > 620 || z > 200 && Math.abs(x) < 200 && z < 185) return false
+    return z > -210 && z < 200 || Math.abs(x) > 640
+  }
+  const put = (list, x, z, y, s) => { if (spot(x, z) || y < 1) list.push(new THREE.Matrix4().compose(new THREE.Vector3(x, y, z), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, Rn() * 6.28, 0)), new THREE.Vector3(s, s, s))) }
+  for (let z = 24; z <= 168; z += 18) for (const sx of [-1, 1]) put(cypress, sx * (24 + (z / 18 % 2) * 4), z, y0, 1.05 + Rn() * 0.4)
+  for (let x = -150; x <= 150; x += 22) if (Math.abs(x) > 20) put(cypress, x, -206, y0, 1.1 + Rn() * 0.35)
+  for (const [x, z] of [[-170, -150], [-170, 20], [170, -150], [170, 40], [-120, 150], [120, 150], [210, -80], [-210, -80]]) for (let k = 0; k < 4; k++) put(pines, x + (Rn() - 0.5) * 16, z + (Rn() - 0.5) * 16, y0, 1.2 + Rn() * 0.55)
+  for (let i = 0; i < 16; i++) put(willows, -160 + Rn() * 320, 300 + Rn() * 140, 0, 0.85 + Rn() * 0.45)
+  for (let i = 0; i < 10; i++) { put(willows, 680 + Rn() * 90, -80 + Rn() * 360, 0, 0.9 + Rn() * 0.4); put(willows, -680 - Rn() * 90, -80 + Rn() * 360, 0, 0.9 + Rn() * 0.4) }
+  for (const sx of [-1, 1]) for (let z = 200; z <= 250; z += 16) put(willows, sx * (78 + Rn() * 30), z, 0, 0.8 + Rn() * 0.35)
+  const PINE = mergeGeometries([new THREE.CylinderGeometry(0.16, 0.28, 2.2, 6).translate(0, 1.1, 0), new THREE.ConeGeometry(1.55, 3.3, 7).translate(0, 3.5, 0), new THREE.ConeGeometry(1.15, 2.6, 7).translate(0, 5.15, 0), new THREE.ConeGeometry(0.72, 2.0, 6).translate(0, 6.45, 0)])
+  const CYP = mergeGeometries([new THREE.CylinderGeometry(0.18, 0.32, 1.5, 6).translate(0, 0.75, 0), new THREE.ConeGeometry(0.95, 8.2, 7).translate(0, 5.0, 0)])
+  const WIL = mergeGeometries([
+    new THREE.CylinderGeometry(0.2, 0.38, 2.2, 6).translate(0, 1.1, 0),
+    new THREE.SphereGeometry(1.7, 7, 5).scale(1.15, 0.45, 1.15).translate(0, 3.15, 0),
+    new THREE.ConeGeometry(0.28, 2.1, 5).rotateZ(1.05).translate(1.35, 2.15, 0.2),
+    new THREE.ConeGeometry(0.26, 2.0, 5).rotateZ(-0.95).translate(-1.25, 2.05, -0.15),
+    new THREE.ConeGeometry(0.24, 1.8, 5).rotateX(0.9).translate(0.15, 2.1, 1.25),
+  ])
+  const tint = (im, base, n) => { const c = new THREE.Color(); for (let i = 0; i < n; i++) im.setColorAt(i, c.set(base).multiplyScalar(0.82 + Rn() * 0.36)); im.instanceColor.needsUpdate = true }
+  const addTrees = (geo, mat, list, col) => { if (!list.length) return; const im = instanced(geo, mat, list); im.userData.noShadow = true; tint(im, col, list.length); tg.add(im) }
+  const tg = new THREE.Group()
+  addTrees(PINE, M.leaf, pines, '#2a3a28'); addTrees(CYP, M.leaf, cypress, '#1e3028'); addTrees(WIL, M.leafW, willows, '#5a6838')
+  part(tg, [0, 20, 0], '林木')
+
+  // 陶罐、车马、小鼎、门前列士（低模剪影，不是文物扫描）
+  const pg = new THREE.Group()
+  const guan = lathe([[0.001, 0], [0.18, 0], [0.26, 0.06], [0.32, 0.28], [0.28, 0.5], [0.16, 0.66], [0.18, 0.74], [0.001, 0.68]], 12)
+  const pots = []
+  for (const sx of [-1, 1]) for (let k = 0; k < 7; k++) pots.push(mtx(sx * 175 + (Rn() - 0.5) * 6, y0, -28 + (Rn() - 0.5) * 8, Rn() * 3, 0.8 + Rn() * 0.5, 0.8 + Rn() * 0.45, 0.8 + Rn() * 0.5))
+  for (let k = 0; k < 5; k++) pots.push(mtx(-24 + k * 1.4, y0, -172, 0, 0.7 + Rn() * 0.3, 0.7, 0.7 + Rn() * 0.3))
+  pg.add(instanced(guan, M.pot, pots))
+  const cart = (x, y, z, ry) => {
+    const c = new THREE.Group()
+    c.add(box(1.55, 0.62, 2.8, M.trunk, 0, 0.95, 0), box(1.7, 0.1, 3.0, M.black, 0, 1.3, 0))
+    for (const s of [-1, 1]) { const w = new THREE.Mesh(new THREE.CylinderGeometry(0.52, 0.52, 0.1, 10), M.black); w.rotation.z = Math.PI / 2; w.position.set(s * 0.92, 0.52, -0.15); c.add(w) }
+    c.add(box(0.08, 0.08, 2.2, M.trunk, 0.32, 0.72, 2.15), box(0.08, 0.08, 2.2, M.trunk, -0.32, 0.72, 2.15))
+    c.position.set(x, y, z); c.rotation.y = ry; return c
+  }
+  pg.add(cart(78, 0, 300, 0.4), cart(96, 0, 312, -0.2), cart(-86, 0, 286, 0.8), cart(-96, y0, 132, 1.2))
+  pg.add(instanced(DING_GEO, M.bronze, [mtx(132, y0, HALL.z + 20, 0, 1.3, 1.3, 1.3), mtx(-132, y0, HALL.z + 20, 0, 1.3, 1.3, 1.3)]))
+  pg.add(box(1.6, 0.35, 1.6, M.stone, 132, y0 + 0.18, HALL.z + 20), box(1.6, 0.35, 1.6, M.stone, -132, y0 + 0.18, HALL.z + 20))
+  part(pg, [0, 24, 20], '车马器皿')
+
+  const fg = new THREE.Group()
+  const FIG = mergeGeometries([
+    new THREE.BoxGeometry(0.42, 0.72, 0.24).translate(0, 1.05, 0),
+    new THREE.BoxGeometry(0.5, 0.1, 0.28).translate(0, 1.42, 0),
+    new THREE.CylinderGeometry(0.11, 0.12, 0.2, 8).translate(0, 1.62, 0),
+    new THREE.BoxGeometry(0.12, 0.72, 0.14).translate(-0.14, 0.36, 0),
+    new THREE.BoxGeometry(0.12, 0.72, 0.14).translate(0.14, 0.36, 0),
+    new THREE.BoxGeometry(0.34, 0.12, 0.34).translate(0, 0.06, 0),
+  ])
+  const figs = [
+    [16, y0, -38, 0], [-16, y0, -38, 0], [20, y0, -36, 0], [-20, y0, -36, 0],
+    [9, y0, 74, Math.PI], [-9, y0, 74, Math.PI],
+    [18, FLOOR, -73.2, 0], [-18, FLOOR, -73.2, 0],
+  ].map(([x, y, z, ry]) => mtx(x, y, z, ry))
+  const fi = instanced(FIG, M.clay, figs); fi.userData.noShadow = true; fg.add(fi)
+  part(fg, [0, 18, 10], '卫士')
+}
+/* ===== 6e. 人物比例尺：仪仗、百官、卫士（1.7 m，【推测】） ===== */
 const PEOPLE = []
 {
   const geo = mergeGeometries([new THREE.CylinderGeometry(0.16, 0.3, 1.25, 7).translate(0, 0.625, 0), new THREE.CylinderGeometry(0.2, 0.17, 0.32, 7).translate(0, 1.4, 0), new THREE.SphereGeometry(0.11, 7, 5).translate(0, 1.63, 0)])
@@ -1078,6 +1247,10 @@ label('铺首衔环', '殿门兽面铜环【推测】', [0, FLOOR + 3, HALL.z + 
 label('风铎', '檐角铜铃【推测】', [-ROOF.w / 2, EAVE_Y - 1, HALL.z + ROOF.d / 2], '庑殿顶')
 label('殿庭大鼎与旗列', '台上礼器、黑旗【推测】', [30, T.H + 5, COURT.z + COURT.D / 2 + 18], '台上礼器')
 label('人物比例尺', '身高 1.7 m 的仪仗与百官【推测】', [-60, T.H + 2, COURT.z + COURT.D / 2 + 50], '人物')
+label('上层阁道', '依壁架木，俯视殿心【推测】', [0, FLOOR + 4.3, HALL.z + HALL.d / 2 - 2], '上层阁道')
+label('周围宫室', '厢房、寝殿、司马门与宫墙【推测】', [188, T.H + 8, 40], '周围宫室')
+label('松柏与柳', '台缘柏列、坡下垂柳【推测】', [36, T.H + 8, 120], '林木')
+label('车马与陶罐', '辎车、陶壶、小鼎【推测】', [90, 2, 300], '车马器皿')
 label('屋顶木构', '檩、椽、梁架（瓦面下）【推测】', [-50, EAVE_Y + 6, HALL.z], '屋顶木构')
 const _v = new THREE.Vector3()
 function updateLabels() {
@@ -1112,7 +1285,7 @@ modesEl.addEventListener('click', (e) => { const b = e.target.closest('button');
 function toggle(k, on) {
   if (k === 'walk') { setWalk(on ?? !STATE.walk); return sync() }
   if (k === 'info') { infoEl.classList.toggle('on', on); document.documentElement.classList.toggle('info-on', infoEl.classList.contains('on')); return sync() }
-  if (k === 'reset') { setLayers(() => true); TARGET.explode = TARGET.cut = TARGET.labels = 0; if (STATE.walk) setWalk(false); setView('overview', 1.2); return sync() }
+  if (k === 'reset') { setLayers(() => true); TARGET.explode = TARGET.cut = TARGET.labels = 0; if (STATE.walk) setWalk(false, true); exitTour(); setView('overview', 1.2); return sync() }
   if (STATE.walk) setWalk(false)
   TARGET[k] = (on ?? TARGET[k] < 0.5) ? 1 : 0
   if (k === 'explode' && TARGET.explode) TARGET.cut = 0
@@ -1126,6 +1299,8 @@ addEventListener('keydown', (e) => {
   const k = { KeyE: 'explode', KeyC: 'cut', KeyL: 'labels', KeyF: 'walk', KeyI: 'info', KeyR: 'reset' }[e.code]
   if (k) { e.preventDefault(); toggle(k) }
   if (e.code === 'Escape' && STATE.walk) toggle('walk', false)
+  if (e.code === 'BracketRight') setTour(tourIdx < 0 ? 0 : tourIdx + 1)
+  if (e.code === 'BracketLeft') setTour(tourIdx < 0 ? STOPS.length - 1 : tourIdx - 1)
 })
 document.getElementById('hour').addEventListener('input', (e) => setHour(Number(e.target.value)))
 
@@ -1151,22 +1326,94 @@ function setView(name, dur = 0) {
 }
 setView('overview')
 
+/* ===== 入殿：可点击的室内视点。平滑飞入，落地后绕目标轻轻环视 ===== */
+const STOPS = [
+  { name: '殿庭', pos: [-2, 13.85, -30], target: [0, 26, -100], fov: 42, note: '台面南侧望前殿。下一处跨进殿门。拖拽可自己环视。' },
+  { name: '殿门', pos: [0, 18.7, -82.6], target: [0, 19.15, -120], fov: 58, note: '南面五间门内。柱网、灯与殿心在前方，御座在北。' },
+  { name: '殿心', pos: [0, 18.75, -105], target: [0, 19.5, -128], fov: 58, note: '殿心向北：御座、漆屏、帷帐。两侧是灯与漆案。' },
+  { name: '西夹', pos: [-37.5, 18.72, -93], target: [-48, 20.4, -116], fov: 58, note: '西序夹道，望向编钟与列柱。' },
+  { name: '东序', pos: [37.5, 18.72, -93], target: [48, 19.6, -116], fov: 58, note: '东序夹道：壁画、玉璧与兰锜。' },
+  { name: '阁上', pos: [0, 21.72, -79.95], target: [0, 19.3, -120], fov: 58, note: '南面阁道俯视全殿。台榭「依壁为阁」的假说，不是发掘遗迹。' },
+]
+let tourIdx = -1, look = null
+const _sph = new THREE.Spherical(), _off = new THREE.Vector3()
+const tourEl = document.querySelector('.tour')
+tourEl.innerHTML = `<div class="row"><span class="hd">入殿</span>${STOPS.map((s, i) => `<button data-i="${i}">${s.name}</button>`).join('')}<button class="nav" data-nav="-1">上一处</button><button class="nav" data-nav="1">下一处</button></div><div class="note"></div>`
+function syncTour() {
+  tourEl.querySelectorAll('button[data-i]').forEach((b) => b.classList.toggle('on', +b.dataset.i === tourIdx))
+  tourEl.querySelector('.note').textContent = tourIdx >= 0 ? `${tourIdx + 1}/${STOPS.length} · ${STOPS[tourIdx].note}` : '殿庭 → 殿门 → 殿心 → 西夹 → 东序 → 阁上。点一处飞入，随后轻轻环视；拖拽可停下自己看。[ ] 切换。'
+}
+function openOrbit() {
+  orbit.minDistance = 0.35; orbit.maxDistance = 8000; orbit.minPolarAngle = 0.08; orbit.maxPolarAngle = Math.PI * 0.92
+}
+function exitTour() {
+  tourIdx = -1; look = null
+  document.documentElement.classList.remove('tour-on')
+  orbit.minDistance = 8; orbit.maxDistance = 4000; orbit.minPolarAngle = 0; orbit.maxPolarAngle = Math.PI * 0.495
+  if (!STATE.walk) { camera.near = 0.3; camera.fov = 38; camera.updateProjectionMatrix() }
+  syncTour()
+}
+function tightenTour() {
+  const dist = Math.max(0.8, camera.position.distanceTo(orbit.target))
+  orbit.minDistance = Math.max(0.45, dist * 0.62)
+  orbit.maxDistance = dist * 1.28
+  orbit.minPolarAngle = 0.12
+  orbit.maxPolarAngle = Math.PI * 0.9
+}
+function setTour(i, dur = 1.5) {
+  const n = STOPS.length
+  i = ((i % n) + n) % n
+  tourIdx = i
+  const s = STOPS[i]
+  if (STATE.walk) setWalk(false, true)
+  openOrbit()
+  camera.near = 0.06; camera.fov = s.fov; camera.updateProjectionMatrix()
+  document.documentElement.classList.add('tour-on')
+  setView({ pos: s.pos, target: s.target }, dur)
+  look = dur > 0 ? { arm: dur + 0.18 } : null
+  syncTour()
+}
+tourEl.addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return
+  if (b.dataset.nav) setTour((tourIdx < 0 ? 0 : tourIdx) + Number(b.dataset.nav))
+  else setTour(+b.dataset.i)
+})
+syncTour()
+function beginLook() {
+  _off.copy(orbit.target).sub(camera.position)
+  _sph.setFromVector3(_off)
+  look = { t: 0, dur: 8.2, theta: _sph.theta, phi: _sph.phi, radius: _sph.radius, sweep: tourIdx === 0 ? 0.42 : 0.62, cam: camera.position.clone() }
+}
+function stepLook(dt) {
+  if (!look || tween) return
+  if (look.arm != null) { look.arm -= dt; if (look.arm <= 0) beginLook(); return }
+  look.t += dt
+  const u = clamp(look.t / look.dur)
+  _sph.radius = look.radius; _sph.phi = look.phi; _sph.theta = look.theta + Math.sin(u * Math.PI) * look.sweep
+  _off.setFromSpherical(_sph)
+  camera.position.copy(look.cam)
+  orbit.target.copy(look.cam).add(_off)
+  if (u >= 1) look = null
+}
+
 /* ===== 第一人称漫游：WASD + 鼠标；地面射线 + 墙体射线碰撞；可登坡道、踏道入殿 ===== */
 const WALK = { pos: new THREE.Vector3(), vy: 0, yaw: 0, pitch: 0, keys: {}, eye: 1.65, r: 0.45, onGround: false, started: false }
 const ray = new THREE.Raycaster(), DOWN = new THREE.Vector3(0, -1, 0)
-function setWalk(on) {
+function setWalk(on, keepView) {
   STATE.walk = on
   document.documentElement.classList.toggle('walk', on)
   orbit.enabled = !on
   if (on) {
     TARGET.explode = TARGET.cut = 0; STATE.explode = STATE.cut = 0; if (typeof LAYERS !== 'undefined') { setLayers(() => true); LAYERS.forEach((L) => (L.lift = 0)); LY.assembleT = undefined } applyParts(); scene.updateMatrixWorld(true)
     camera.near = 0.08; camera.fov = 68; camera.updateProjectionMatrix()
-    if (!WALK.started) walkTo(-14, RAMP.z0 + RAMP.len + 30, 0, 0.03)
+    if (tourIdx >= 0) {
+      const s = STOPS[tourIdx]
+      walkTo(s.pos[0], s.pos[2], Math.atan2(-(s.target[0] - s.pos[0]), -(s.target[2] - s.pos[2])), 0, s.pos[1] - WALK.eye)
+    } else if (!WALK.started) walkTo(-14, RAMP.z0 + RAMP.len + 30, 0, 0.03)
     setShadowFrame(WALK.pos.x, WALK.pos.z, 170); setHour(STATE.hour)
   } else {
-    camera.near = 0.3; camera.fov = 38; camera.updateProjectionMatrix(); shadowKey = ''; setShadowFrame(0, -20, 760); setHour(STATE.hour)
     if (document.pointerLockElement) document.exitPointerLock()
-    setView('overview')
+    if (!keepView) { exitTour(); shadowKey = ''; setShadowFrame(0, -20, 760); setHour(STATE.hour); setView('overview') }
   }
   sync()
 }
@@ -1180,7 +1427,7 @@ addEventListener('keydown', (e) => { if (STATE.walk) { WALK.keys[e.code] = true;
 addEventListener('keyup', (e) => { WALK.keys[e.code] = false })
 canvas.addEventListener('click', () => { if (STATE.walk && !document.pointerLockElement) canvas.requestPointerLock?.() })
 let drag = null
-canvas.addEventListener('mousedown', (e) => { if (STATE.walk) drag = [e.clientX, e.clientY] })
+canvas.addEventListener('mousedown', (e) => { if (STATE.walk) drag = [e.clientX, e.clientY]; else look = null })
 addEventListener('mouseup', () => { drag = null })
 addEventListener('mousemove', (e) => {
   if (!STATE.walk) return
@@ -1190,7 +1437,17 @@ addEventListener('mousemove', (e) => {
 })
 const _fw = new THREE.Vector3(), _rt = new THREE.Vector3(), _dir = new THREE.Vector3(), _ax = new THREE.Vector3(), _o = new THREE.Vector3()
 function blocked(dir, dist) {
-  for (const h of [0.5, 1.3]) { ray.set(_o.set(WALK.pos.x, WALK.pos.y + h, WALK.pos.z), dir); ray.far = dist + WALK.r; if (ray.intersectObjects(WALLS, false).length) return true }
+  const x = WALK.pos.x, z = WALK.pos.z
+  const S = HALL.z + HALL.d / 2, z0 = HALL.z + SEC.d / 2
+  // 南面五间殿门、中轴踏道：实体台座和门柱会把射线封死，这里留出可走的口
+  if (Math.abs(x) < HALL.bayX * 2.55 && z < S + 2.4 && z > S - 3.4) return false
+  if (Math.abs(x) < 14 && z > z0 - 1.5 && z < z0 + 27) return false
+  if (Math.abs(x) < 8 && Math.abs(z - 86) < 3) return false
+  for (const h of [0.5, 1.3]) {
+    ray.set(_o.set(WALK.pos.x, WALK.pos.y + h, WALK.pos.z).addScaledVector(dir, 0.15), dir)
+    ray.far = dist + WALK.r
+    if (ray.intersectObjects(WALLS, false).length) return true
+  }
   return false
 }
 function walkStep(dt) {
@@ -1223,12 +1480,21 @@ const $ = (s) => document.querySelector(s)
 const heroV = $('.big .v'), heroU = $('.big .u'), heroS = $('.metric .st'), heroL = $('.metric .hl'), heroSub = $('.metric .sub'), heroBar = $('.bar div')
 function zone() {
   const p = WALK.pos
+  if (Math.abs(p.x) < HALL.w / 2 && Math.abs(p.z - HALL.z) < HALL.d / 2 && p.y > FLOOR + 2.2) return '上层阁道'
   if (Math.abs(p.x) < HALL.w / 2 && Math.abs(p.z - HALL.z) < HALL.d / 2 && p.y > FLOOR - 0.3) return '前殿殿内'
   if (p.y > FLOOR - 0.3) return '二层台上'
   if (p.y > T.H - 0.3) return Math.abs(p.z - COURT.z) < COURT.D / 2 && Math.abs(p.x) < COURT.W / 2 ? '殿庭' : '台基之上'
   return p.y > 0.3 ? '南坡道' : '台下平地'
 }
 function hero() {
+  if (tourIdx >= 0 && !STATE.walk) {
+    const s = STOPS[tourIdx]
+    heroL.textContent = '入殿'; heroS.textContent = s.name
+    heroV.textContent = String(tourIdx + 1); heroU.textContent = `/ ${STOPS.length}`
+    heroBar.style.width = `${((tourIdx + 1) / STOPS.length) * 100}%`
+    heroSub.textContent = s.note
+    return
+  }
   if (STATE.walk) {
     heroL.textContent = '漫游'; heroS.textContent = zone()
     heroV.textContent = fmt(WALK.pos.y, 1); heroU.textContent = 'm 足下高程'
@@ -1252,7 +1518,7 @@ infoEl.innerHTML = `
 <h4>尺度换算（单位假定）</h4>
 <p>秦尺 ≈ 0.231 m（学界约 0.23–0.231 有出入）；1 步 = 6 尺 ≈ 1.386 m；1 丈 ≈ 2.31 m。东西五百步 ≈ 693 m，南北五十丈 ≈ 115.5 m，五丈旗 ≈ 11.55 m。文献尺寸远小于考古台基——本方案解释为台上殿庭外轮廓【推测】。</p>
 <h4>本模型的推测项</h4>
-<p>墙厚 15 m、高 3 m；南坡道 60 × 80 m；二层台 5 m；主殿面阔 23 间、进深 9 间（约 150 × 60 m，柱高 6.5 m）；庑殿顶坡度约 1:2.4；一斗二升斗栱雏形；配殿、回廊、角阙、阁道与复道走向；殿内御座台、漆屏风、青铜灯与壁画题材（参照咸阳宫壁画残迹的通行描述）。秦尺取值、开间数、台基原高、阁道走向均无直接证据。</p>
+<p>墙厚 15 m、高 3 m；南坡道 60 × 80 m；二层台 5 m；主殿面阔 23 间、进深 9 间（约 150 × 60 m，柱高 6.5 m）；庑殿顶坡度约 1:2.4；一斗二升斗栱雏形；配殿、回廊、角阙、阁道与复道走向；殿内御座台、漆屏风、青铜灯、上层阁道与壁画题材（参照咸阳宫壁画残迹的通行描述）。主殿四周的厢房、宫墙、司马门、松柏柳、车马陶罐与卫士剪影同样是推测，用来把台基画成宫苑，不是发掘平面。秦尺取值、开间数、台基原高、阁道走向均无直接证据。</p>
 <h4>新发掘（2015–2017、2025）</h4>
 <p>台基建于积水洼地 / 湖沼淤泥之上，先排水清淤、分块夯筑；南缘并非直线，某处比原复原线北移约 32 m。本模型南缘三段折线仅为示意。</p>
 <h4>待读权威</h4>
@@ -1268,7 +1534,7 @@ const LAYERS = [
   { name: '屋顶木构 / 斗栱', color: '#7a5532', parts: ['屋顶木构', '斗栱'] },
   { name: '梁枋', color: '#2c2420', parts: ['梁枋', '梁枋彩画'] },
   { name: '柱网', color: '#8a3a28', parts: ['柱网'] },
-  { name: '墙体门窗', color: '#d8cfbd', parts: ['墙体', '配殿'] },
+  { name: '墙体门窗', color: '#d8cfbd', parts: ['墙体', '配殿', '上层阁道'] },
   { name: '室内陈设', color: '#4a5238', parts: ['殿内陈设', '殿内礼器', '帷帐', '编钟', '玉璧兰锜', '殿内黑旗', '殿内铺地'] },
   { name: '台上附属', sub: '回廊·阙·阁道·旗·人物', color: '#9b2a17', parts: [] },
   { name: '二层台', color: '#b49a72', parts: ['二层台', '踏道'] },
@@ -1364,6 +1630,7 @@ setQuality(QUALITY)
 function renderFrame() {
   const d = camera.position.distanceTo(STATE.walk ? WALK.pos : orbit.target)
   gtao.enabled = window.__q !== 'low' && STATE.cut < 0.01 && d < 900   // 剖切时关闭（法线通道不支持剖切面）
+  gtao.blendIntensity = tourIdx > 0 ? 0.38 : 0.85
   if (gtao.enabled) gtao.updateGtaoMaterial({ radius: STATE.walk ? 1.4 : clamp(d * 0.012, 1.2, 8) })
   for (const m of LODS) m.visible = camera.position.distanceTo(m.getWorldPosition(_lodV)) < m.userData.lod + 160
   composer.render()
@@ -1388,7 +1655,7 @@ function updateScale() {
   let L = 1; for (const n of [1, 2, 5, 10, 20, 50, 100, 200, 500]) if (n * px <= 150) L = n
   el.querySelector('div').style.width = `${(L * px).toFixed(1)}px`; el.querySelector('span').textContent = `${L} m`
 }
-const promptTxt = '秦阿房宫前殿：若按《史记》规划建成'
+const promptTxt = '点「入殿」从殿庭走到阁上，看前殿内部'
 let last = performance.now(), t0 = last, time = 0
 function frame(now) {
   const dt = clamp((now - last) / 1000, 0, 0.05); last = now; time += dt
@@ -1401,7 +1668,11 @@ function frame(now) {
   for (const f of FLAGS) { const a = f.geometry.attributes.position, b = f.userData.base; for (let i = 0; i < a.count; i++) { const x = b[i * 3], y = b[i * 3 + 1]; a.array[i * 3 + 2] = Math.sin(time * 2.4 + x * 1.6 + y * 0.5 + f.userData.ph) * (f.userData.amp ?? 0.3) * (x / 2.6) } a.needsUpdate = true; f.geometry.computeVertexNormals() }
   if (STATE.walk) walkStep(dt)
   else {
-    if (tween) { tween.t += dt; const k = ease(clamp(tween.t / tween.dur)); camera.position.lerpVectors(tween.p0, tween.p1, k); orbit.target.lerpVectors(tween.t0, tween.t1, k); if (k >= 1) tween = null }
+    if (tween) {
+      tween.t += dt; const k = ease(clamp(tween.t / tween.dur))
+      camera.position.lerpVectors(tween.p0, tween.p1, k); orbit.target.lerpVectors(tween.t0, tween.t1, k)
+      if (k >= 1) { tween = null; if (tourIdx >= 0) tightenTour() }
+    } else stepLook(dt)
     orbit.update(); frameShadowToView()
   }
   hero(); updateLabels(); updateScale()
@@ -1415,7 +1686,7 @@ requestAnimationFrame(frame)
 // 自动化 / 截图钩子（同 lab-kit 的 window.__lab）
 window.__app = {
   THREE, scene, camera, renderer, parts, STATE, TARGET, WALK, VIEWS, FLOORS, WALLS,
-  setView, toggle, setHour, walkTo, setWalk, setQuality, composer, LAYERS, peel, setLayers, playPeel, assembleAll,
+  setView, toggle, setHour, walkTo, setWalk, setQuality, composer, LAYERS, peel, setLayers, playPeel, assembleAll, setTour, STOPS,
   settleLayers() { for (const L of LAYERS) L.lift = L.on ? 0 : 1; LY.assembleT = undefined; applyParts(); scene.updateMatrixWorld(true) },
   assembleAt(t) { assembleAll(); LY.assembleT = t; updateLayers(0); applyParts() },
   cine(on = true, fov = 30) { document.documentElement.classList.toggle('cine', on); orbit.maxPolarAngle = on ? Math.PI * 0.64 : Math.PI * 0.495; sky.material.uniforms.drama.value = on ? 1 : 0; camera.fov = on ? fov : 38; camera.updateProjectionMatrix() },
